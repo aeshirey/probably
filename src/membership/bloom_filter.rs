@@ -26,7 +26,6 @@
 use std::error::Error;
 use std::fmt;
 use std::hash::{Hash, Hasher};
-use std::marker::PhantomData;
 
 use bit_vec::BitVec;
 use siphasher::sip::SipHasher24;
@@ -107,10 +106,7 @@ impl BloomBuilder {
 
     /// Once the desired size of false positive ratio has been set, `finish` is used to
     /// return the desired bloom filter.
-    pub fn finish<T>(&self) -> Result<Bloom<T>, BloomError>
-    where
-        T: Hash,
-    {
+    pub fn finish(&self) -> Result<Bloom, BloomError> {
         match self.parameter {
             BloomParameter::Empty => Err(BloomError::NoParameterSet),
             BloomParameter::Size(size) => {
@@ -121,7 +117,7 @@ impl BloomBuilder {
             BloomParameter::FPR(p) => {
                 let min_size = BloomBuilder::min_size(self.elements, p);
                 let hash_count = BloomBuilder::optimal_hash_count(self.elements, min_size);
-                let bloom: Bloom<T> = Bloom::new(min_size, hash_count);
+                let bloom: Bloom = Bloom::new(min_size, hash_count);
                 Ok(bloom)
             }
         }
@@ -153,7 +149,7 @@ impl BloomBuilder {
 ///
 /// An implementation of a bloom filter.
 #[derive(Debug)]
-pub struct Bloom<T: Hash> {
+pub struct Bloom {
     bits: BitVec,
 
     // the number of hash functions to compute when inserting and looking up elements
@@ -162,17 +158,14 @@ pub struct Bloom<T: Hash> {
     // we only need two independent hash functions because we can use double hashing to
     // create new independent hash functions from those two
     hashers: [SipHasher24; 2],
-
-    marker: PhantomData<T>,
 }
 
-impl<T: Hash> Bloom<T> {
+impl Bloom {
     fn new(size: u64, k: u32) -> Self {
         Bloom {
             bits: BitVec::from_elem(size as usize, false),
             k,
-            hashers: [Bloom::<T>::get_hasher(), Bloom::<T>::get_hasher()],
-            marker: PhantomData,
+            hashers: [Bloom::get_hasher(), Bloom::get_hasher()],
         }
     }
 
@@ -182,7 +175,10 @@ impl<T: Hash> Bloom<T> {
     }
 
     // insert a key into the bloom filter
-    pub fn insert(&mut self, key: T) {
+    pub fn insert<T>(&mut self, key: T)
+    where
+        T: Hash,
+    {
         // we need to save the results of the first two hashes for when we need to get more
         // than two hashes since we use double hashing uses those hashes to compute further hashes
         let mut hashes = [0u64, 0u64];
@@ -193,7 +189,10 @@ impl<T: Hash> Bloom<T> {
     }
 
     // check if a key may have been inserted into the bloom filter
-    pub fn lookup(&self, item: T) -> bool {
+    pub fn lookup<T>(&self, item: T) -> bool
+    where
+        T: Hash,
+    {
         let mut hashes = [0u64, 0u64];
         for i in 0..self.k {
             let index = self.get_hash(&mut hashes, &item, i) % self.bits.len();
@@ -207,7 +206,10 @@ impl<T: Hash> Bloom<T> {
 
     // insert a key into the filter and return a bool indicating whether the key may have
     // been inserted already or not
-    pub fn lookup_and_insert(&mut self, key: T) -> bool {
+    pub fn lookup_and_insert<T>(&mut self, key: T) -> bool
+    where
+        T: Hash,
+    {
         let mut hashes = [0u64, 0u64];
         let mut found = true;
         for i in 0..self.k {
@@ -222,7 +224,10 @@ impl<T: Hash> Bloom<T> {
     }
 
     // private method to get the hash of the key
-    fn get_hash(&self, hashes: &mut [u64; 2], key: &T, i: u32) -> usize {
+    fn get_hash<T>(&self, hashes: &mut [u64; 2], key: &T, i: u32) -> usize
+    where
+        T: Hash,
+    {
         if i < 2 {
             let mut hasher = self.hashers[i as usize];
             key.hash(&mut hasher);
@@ -246,7 +251,7 @@ mod tests {
         let size = 2u64.pow(20);
         let b = BloomBuilder::new(size / 2)
             .with_size(size)
-            .finish::<i64>()
+            .finish()
             .unwrap();
         assert_eq!(b.bits.len() as u64, size);
         assert_eq!(b.k, 2);
@@ -256,10 +261,7 @@ mod tests {
     fn test_with_fpr() {
         let elements = 2u64.pow(20);
         let fpr = 0.01;
-        let b = BloomBuilder::new(elements)
-            .with_fpr(fpr)
-            .finish::<i64>()
-            .unwrap();
+        let b = BloomBuilder::new(elements).with_fpr(fpr).finish().unwrap();
         println!("{:?}", b.bits.len());
         assert_eq!(b.k, 7);
     }
@@ -268,10 +270,7 @@ mod tests {
     fn test_operations() {
         let elements = 2u64.pow(20);
         let fpr = 0.01;
-        let mut b = BloomBuilder::new(elements)
-            .with_fpr(fpr)
-            .finish::<i64>()
-            .unwrap();
+        let mut b = BloomBuilder::new(elements).with_fpr(fpr).finish().unwrap();
 
         assert!(!b.lookup(3));
         assert!(!b.lookup(23));
