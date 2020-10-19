@@ -4,6 +4,7 @@
 #![allow(clippy::unreadable_literal)]
 
 pub mod counting;
+pub mod membership;
 
 #[cfg(test)]
 mod tests {
