@@ -1,6 +1,5 @@
 use rand;
 
-use rand::RngCore;
 use std::borrow::Borrow;
 use std::cmp::max;
 use std::hash::{Hash, Hasher};
@@ -13,10 +12,14 @@ use std::mem;
 
 macro_rules! cms_define {
     ($CountMinSketch:ident, $Counter:ty) => {
+        #[cfg_attr(feature = "with_serde", derive(serde::Serialize, serde::Deserialize))]
         pub struct $CountMinSketch<K> {
             counters: Vec<Vec<$Counter>>,
             offsets: Vec<usize>,
-            hashers: [FastHasher; 2],
+            key0_0: u64,
+            key0_1: u64,
+            key1_0: u64,
+            key1_1: u64,
             mask: usize,
             k_num: usize,
             reset_idx: usize,
@@ -32,17 +35,39 @@ macro_rules! cms_define {
                 probability: f64,
                 tolerance: f64,
             ) -> Result<Self, &'static str> {
+                Self::new_from_keys(
+                    capacity,
+                    probability,
+                    tolerance,
+                    rand::random(),
+                    rand::random(),
+                    rand::random(),
+                    rand::random(),
+                )
+            }
+
+            pub fn new_from_keys(
+                capacity: usize,
+                probability: f64,
+                tolerance: f64,
+                key0_0: u64,
+                key0_1: u64,
+                key1_0: u64,
+                key1_1: u64,
+            ) -> Result<Self, &'static str> {
                 let width = Self::optimal_width(capacity, tolerance);
                 let k_num = Self::optimal_k_num(probability);
                 let counters: Vec<Vec<$Counter>> = vec![vec![0; width]; k_num];
                 let offsets = vec![0; k_num];
-                let hashers = [Self::sip_new(), Self::sip_new()];
                 let cms = $CountMinSketch {
-                    counters: counters,
-                    offsets: offsets,
-                    hashers: hashers,
+                    counters,
+                    offsets,
+                    key0_0,
+                    key0_1,
+                    key1_0,
+                    key1_1,
                     mask: Self::mask(width),
-                    k_num: k_num,
+                    k_num,
                     reset_idx: 0,
                     phantom_k: PhantomData,
                 };
@@ -112,7 +137,6 @@ macro_rules! cms_define {
                     }
                 }
                 self.reset_idx = 0;
-                self.hashers = [Self::sip_new(), Self::sip_new()];
             }
 
             pub fn reset(&mut self) {
@@ -156,19 +180,19 @@ macro_rules! cms_define {
                 max(1, ((1.0 - probability).ln() / 0.5f64.ln()) as usize)
             }
 
-            fn sip_new() -> FastHasher {
-                let mut rng = rand::thread_rng();
-                FastHasher::new_with_keys(rng.next_u64(), rng.next_u64())
-            }
-
             fn offset<Q: ?Sized>(&self, hashes: &mut [u64; 2], key: &Q, k_i: usize) -> usize
             where
                 Q: Hash,
                 K: Borrow<Q>,
             {
                 if k_i < 2 {
-                    let sip = &mut self.hashers[k_i as usize].clone();
-                    key.hash(sip);
+                    let mut sip = if k_i == 0 {
+                        FastHasher::new_with_keys(self.key0_0, self.key0_1)
+                    } else {
+                        FastHasher::new_with_keys(self.key1_0, self.key1_1)
+                    };
+
+                    key.hash(&mut sip);
                     let hash = sip.finish();
                     hashes[k_i as usize] = hash;
                     hash as usize & self.mask
