@@ -3,14 +3,14 @@
 #![allow(non_snake_case)]
 #![allow(clippy::unreadable_literal)]
 
-pub mod counting;
+pub mod frequency;
 pub mod membership;
 
 #[cfg(test)]
 mod tests {
     #[test]
     fn hll_test() {
-        let mut my_hll = crate::counting::hll::HyperLogLog::new(0.01);
+        let mut my_hll = crate::frequency::hll::HyperLogLog::new(0.01);
         my_hll.insert(&"foobar".to_string());
         my_hll.insert(&"baz");
         my_hll.insert(&1234_u64);

@@ -2,7 +2,7 @@
 // Virtually all of this code comes from https://github.com/jedisct1/rust-hyperloglog
 
 //! HyperLogLog implementation for Rust
-use crate::counting::hll_data;
+use crate::frequency::hll_data;
 use siphasher::sip::SipHasher13;
 use std::cmp::Ordering::{Equal, Greater, Less};
 use std::hash::{Hash, Hasher};
