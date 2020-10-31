@@ -23,7 +23,7 @@ These algorithms determine if an item _n_ exists in the set _N_, guaranteeing no
 - [ ] Quotient filter - like Bloom filter, but can be merged and resized more efficiently. Uses 10-25% more space than BF.
    - [Paper on MQF](https://www.biorxiv.org/content/10.1101/2020.08.23.263061v1), "a compact hashtable, can efficiently store k-mers with a skewed distribution"
    - [MQF implemented in C++](https://github.com/dib-lab/MQF)
-- [ ] Cuckoo filter - like Bloom filter, but can delete items. Can use lower space overhead than BF.
+- [X] **Cuckoo filter** -- implemented from [`rust-cuckoofilter`](https://github.com/axiomhq/rust-cuckoofilter). like Bloom filter, but can delete items. Can use lower space overhead than BF.
 
 
 ## Other
