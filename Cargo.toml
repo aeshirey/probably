@@ -1,8 +1,21 @@
 [package]
 name = "probably"
 version = "0.1.0"
-authors = ["Adam Shirey <adam.shirey@gmail.com>"]
+authors = ["Adam Shirey <adam@shirey.ch>"]
 edition = "2018"
+
+
+description = "A library with various approximate computing algorithms"
+readme = "README.md"
+homepage = "https://github.com/aeshirey/probably/"
+repository = "https://github.com/aeshirey/probably/"
+license-file = "LICENSE"
+keywords = ["approximate computing", "approximate", "hll", "hyperloglog", "bloom", "bloom filter", "count-min sketch"]
+#exclude = [ ]
+
+
+
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
