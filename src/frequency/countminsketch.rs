@@ -216,7 +216,7 @@ cms_define!(CountMinSketch64, u64);
 mod tests {
     #[test]
     fn test_overflow() {
-        use crate::CountMinSketch8;
+        use crate::frequency::CountMinSketch8;
 
         let mut cms = CountMinSketch8::<&str>::new(100, 0.95, 10.0).unwrap();
         for _ in 0..300 {
@@ -227,7 +227,7 @@ mod tests {
 
     #[test]
     fn test_increment() {
-        use crate::CountMinSketch16;
+        use crate::frequency::CountMinSketch16;
 
         let mut cms = CountMinSketch16::<&str>::new(100, 0.95, 10.0).unwrap();
         for _ in 0..300 {
@@ -238,7 +238,7 @@ mod tests {
 
     #[test]
     fn test_increment_multi() {
-        use crate::CountMinSketch64;
+        use crate::frequency::CountMinSketch64;
 
         let mut cms = CountMinSketch64::<u64>::new(100, 0.99, 2.0).unwrap();
         for i in 0..1_000_000 {
