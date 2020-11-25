@@ -6,7 +6,22 @@ This library is a collection of several approximate computing algorithms written
 * **Parallelization**. When possible, algorithms should be capable of being parallelized (ie, map-reduce of the core algorithm). This includes serialization of datasets.
 * **Common dependencies**. Minimize the dependency chain to reduce build times and binary sizes.
 
-**NOTE** that I did not write any of these algorithms - they are all implemented by other talented Rustaceans, the repositories for which are linked below. I have, however, added some functionality (serialization/deserialization, exposing new initialization functions, etc.). All source code is MIT- or Apache-licensed.
+**NOTE** that I did not write any of these algorithms - they are all implemented by other talented Rustaceans, the repositories for which are linked below. I have, however, added some functionality (serialization/deserialization, exposing new initialization functions, etc.). All source code is MIT-licensed.
+
+## Using
+To use `probably` in your Cargo.toml:
+
+```toml
+probably = "0.0.1"
+```
+
+Note that as of 2020-11-25, the P2 quantile estimator is not yet included in the published crate.
+
+To include serialization of data structures, include the `with_serde` feature:
+
+```toml
+probably = { version = "0.0.1", features = ["with_serde"] }
+```
 
 The algorithms implemented in this library and on the roadmap fall into one of several categories:
 
@@ -24,6 +39,11 @@ These algorithms determine if an item _n_ exists in the set _N_, guaranteeing no
    - [Paper on MQF](https://www.biorxiv.org/content/10.1101/2020.08.23.263061v1), "a compact hashtable, can efficiently store k-mers with a skewed distribution"
    - [MQF implemented in C++](https://github.com/dib-lab/MQF)
 - [X] **Cuckoo filter** -- implemented from [`rust-cuckoofilter`](https://github.com/axiomhq/rust-cuckoofilter). like Bloom filter, but can delete items. Can use lower space overhead than BF.
+
+## Quantile Estimators
+- [X] [Piecewise-Parabolic Quantile Estimator](https://aakinshin.net/posts/p2-quantile-estimator/) -- translated from [`perfolizer` C#](https://github.com/AndreyAkinshin/perfolizer/blob/f5615525ce36140d13bf6cf9fdf98f48c3e23206/src/Perfolizer/Perfolizer/Mathematics/QuantileEstimators/P2QuantileEstimator.cs)
+   - [Other `perfolizer` estimators](https://github.com/AndreyAkinshin/perfolizer/tree/f5615525ce36140d13bf6cf9fdf98f48c3e23206/src/Perfolizer/Perfolizer/Mathematics/QuantileEstimators)
+   - [postmates/quantiles](https://github.com/postmates/quantiles)
 
 
 ## Other
