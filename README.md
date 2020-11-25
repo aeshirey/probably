@@ -35,19 +35,20 @@ These algorithms approxmate counting the number of items in a set within some ap
 These algorithms determine if an item _n_ exists in the set _N_, guaranteeing no false negatives at the cost of some false positives.
 
 - [X] **Bloom Filter** -- implemented from [`bloom_filter`](https://github.com/jeromefroe/bloom_filter)
-- [ ] Quotient filter - like Bloom filter, but can be merged and resized more efficiently. Uses 10-25% more space than BF.
+- [ ] **Quotient filter** -- like Bloom filter, but can be merged and resized more efficiently. Uses 10-25% more space than BF.
    - [Paper on MQF](https://www.biorxiv.org/content/10.1101/2020.08.23.263061v1), "a compact hashtable, can efficiently store k-mers with a skewed distribution"
    - [MQF implemented in C++](https://github.com/dib-lab/MQF)
 - [X] **Cuckoo filter** -- implemented from [`rust-cuckoofilter`](https://github.com/axiomhq/rust-cuckoofilter). like Bloom filter, but can delete items. Can use lower space overhead than BF.
 
 ## Quantile Estimators
-- [X] [Piecewise-Parabolic Quantile Estimator](https://aakinshin.net/posts/p2-quantile-estimator/) -- translated from [`perfolizer` C#](https://github.com/AndreyAkinshin/perfolizer/blob/f5615525ce36140d13bf6cf9fdf98f48c3e23206/src/Perfolizer/Perfolizer/Mathematics/QuantileEstimators/P2QuantileEstimator.cs)
+- [X] **[Piecewise-Parabolic Quantile Estimator](https://aakinshin.net/posts/p2-quantile-estimator/)** -- translated from [`perfolizer` C#](https://github.com/AndreyAkinshin/perfolizer/blob/f5615525ce36140d13bf6cf9fdf98f48c3e23206/src/Perfolizer/Perfolizer/Mathematics/QuantileEstimators/P2QuantileEstimator.cs)
    - [Other `perfolizer` estimators](https://github.com/AndreyAkinshin/perfolizer/tree/f5615525ce36140d13bf6cf9fdf98f48c3e23206/src/Perfolizer/Perfolizer/Mathematics/QuantileEstimators)
-   - [postmates/quantiles](https://github.com/postmates/quantiles)
-
+- [X] **[Greenwald-Khanna](http://infolab.stanford.edu/~datar/courses/cs361a/papers/quantiles.pdf)** -- implemented from [`postmates/quantiles`](https://github.com/postmates/quantiles)
+- [X] **[Misra-Gries](https://people.csail.mit.edu/rrw/6.045-2017/encalgs-mg.pdf)** -- also from `postmates/quantiles`
+- [X] **Histogram** -- also from `postmates/quantiles`
 
 ## Other
-- MinHash for estimating similarity of two sets
+- [ ] MinHash for estimating similarity of two sets
 
 # Additional reading
 * [Probabilistic Data Structures](https://iq.opengenus.org/probabilistic-data-structures/)

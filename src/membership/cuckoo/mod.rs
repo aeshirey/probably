@@ -1,6 +1,5 @@
-// This module implemented from rust-cuckoofilter: 
+// This module implemented from rust-cuckoofilter:
 // https://github.com/axiomhq/rust-cuckoofilter
-
 
 //! Cuckoo filter probabilistic data structure for membership testing and cardinality counting.
 //!

@@ -7,6 +7,11 @@ pub mod frequency;
 pub mod membership;
 pub mod quantile;
 
+// For quantiles
+#[cfg(test)]
+#[macro_use]
+extern crate quickcheck;
+
 #[cfg(test)]
 mod tests {
     #[test]
