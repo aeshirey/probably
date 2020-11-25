@@ -1,6 +1,7 @@
 // https://github.com/AndreyAkinshin/perfolizer/blob/master/src/Perfolizer/Perfolizer/Mathematics/QuantileEstimators/P2QuantileEstimator.cs
 
 #[derive(Debug)]
+#[cfg_attr(feature = "with_serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct P2 {
     p: f64,
     n: [i32; 5],  // marker positions
@@ -109,10 +110,10 @@ impl P2 {
     }
 
     fn linear(&self, i: usize, d: i32) -> f64 {
-        let num = self.q[i] + d as f64 * (self.q[(i as i32 + d) as usize] - self.q[i]);
-        let denom = (self.n[(i as i32 + d) as usize] - self.n[i]);
+        let num = d as f64 * (self.q[(i as i32 + d) as usize] - self.q[i]);
+        let denom = self.n[(i as i32 + d) as usize] - self.n[i];
 
-        num / denom as f64
+        self.q[i] + (num / denom as f64)
     }
 
     pub fn get_quantile(&self) -> f64 {
@@ -145,6 +146,10 @@ mod tests {
             println!("{:?}", estimator);
         }
 
-        assert_eq!(estimator.get_quantile(), 4.44);
+        // The unit test in the C# project claims the expected is 4.44, but the value they're
+        // getting is:
+        let expected = 4.4406343532603376;
+
+        assert!((estimator.get_quantile() - expected) < 0.00000001 );
     }
 }
