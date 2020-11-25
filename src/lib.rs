@@ -5,6 +5,7 @@
 
 pub mod frequency;
 pub mod membership;
+pub mod quantile;
 
 #[cfg(test)]
 mod tests {
