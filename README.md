@@ -47,7 +47,6 @@ These algorithms determine if an item _n_ exists in the set _N_, guaranteeing no
 - [X] **[Misra-Gries](https://people.csail.mit.edu/rrw/6.045-2017/encalgs-mg.pdf)** -- also from `postmates/quantiles`
 - [X] **Histogram** -- also from `postmates/quantiles`
 
-
 ## Other
 - [ ] MinHash for estimating similarity of two sets
 
