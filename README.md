@@ -12,15 +12,13 @@ This library is a collection of several approximate computing algorithms written
 To use `probably` in your Cargo.toml:
 
 ```toml
-probably = "0.0.1"
+probably = "0.2.0"
 ```
-
-Note that as of 2020-11-25, the P2 quantile estimator is not yet included in the published crate.
 
 To include serialization of data structures, include the `with_serde` feature:
 
 ```toml
-probably = { version = "0.0.1", features = ["with_serde"] }
+probably = { version = "0.2.0", features = ["with_serde"] }
 ```
 
 The algorithms implemented in this library and on the roadmap fall into one of several categories:
