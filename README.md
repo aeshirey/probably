@@ -6,7 +6,7 @@ This library is a collection of several approximate computing algorithms written
 * **Parallelization**. When possible, algorithms should be capable of being parallelized (ie, map-reduce of the core algorithm). This includes serialization of datasets.
 * **Common dependencies**. Minimize the dependency chain to reduce build times and binary sizes.
 
-**NOTE** that I did not write any of these algorithms - they are all implemented by other talented Rustaceans, the repositories for which are linked below. I have, however, added some functionality (serialization/deserialization, exposing new initialization functions, etc.). All source code is MIT-licensed.
+**NOTE** that I did not write any of these algorithms - they are all implemented by other talented Rustaceans, the repositories for which are linked below. I have, however, added some functionality (serialization/deserialization, exposing new initialization functions, etc.), and I did implement the Rust version from C#. All source code is MIT-licensed.
 
 ## Using
 To use `probably` in your Cargo.toml:
