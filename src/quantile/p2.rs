@@ -150,6 +150,6 @@ mod tests {
         // getting is:
         let expected = 4.4406343532603376;
 
-        assert!((estimator.get_quantile() - expected) < 0.00000001 );
+        assert!((estimator.get_quantile() - expected) < 0.00000001);
     }
 }

@@ -10,7 +10,7 @@ readme = "README.md"
 homepage = "https://github.com/aeshirey/probably/"
 repository = "https://github.com/aeshirey/probably/"
 license-file = "LICENSE"
-keywords = ["approximate computing", "frequency", "quantile", "membership"]
+keywords = ["approximate", "frequency", "quantile", "membership"]
 categories = ["algorithms", "data-structures", "mathematics", "science"]
 #exclude = [ ]
 

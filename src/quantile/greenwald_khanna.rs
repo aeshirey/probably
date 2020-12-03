@@ -120,7 +120,7 @@ where
 
 /// 3-tuple of a value v[i], g[i] and delta[i].
 #[cfg_attr(feature = "with_serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Eq, Debug)]
+#[derive(Clone, Eq, Debug)]
 pub struct Tuple<T>
 where
     T: PartialOrd,
@@ -177,7 +177,7 @@ where
 
 /// The summary S of the observations seen so far.
 #[cfg_attr(feature = "with_serde", derive(serde::Serialize, serde::Deserialize))]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Stream<T>
 where
     T: PartialOrd,
