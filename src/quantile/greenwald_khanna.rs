@@ -84,7 +84,7 @@ use std::ops::AddAssign;
 /// and greater than or equal to the element at i-1 if any.
 pub fn find_insert_pos<T>(vs: &[T], v: &T) -> usize
 where
-    T: Ord,
+    T: PartialOrd,
 {
     if vs.len() <= 10 {
         return find_insert_pos_linear(vs, v);
@@ -107,7 +107,7 @@ where
 /// Works by scanning the slice from start to end.
 pub fn find_insert_pos_linear<T>(vs: &[T], v: &T) -> usize
 where
-    T: Ord,
+    T: PartialOrd,
 {
     for (i, vi) in vs.iter().enumerate() {
         if v < vi {
@@ -123,7 +123,7 @@ where
 #[derive(Eq, Debug)]
 pub struct Tuple<T>
 where
-    T: Ord,
+    T: PartialOrd,
 {
     /// v[i], an observation in the set of observations
     pub v: T,
@@ -138,7 +138,7 @@ where
 
 impl<T> Tuple<T>
 where
-    T: Ord,
+    T: PartialOrd,
 {
     /// Creates a new instance of a Tuple
     pub fn new(v: T, g: usize, delta: usize) -> Tuple<T> {
@@ -148,7 +148,7 @@ where
 
 impl<T> PartialEq for Tuple<T>
 where
-    T: Ord,
+    T: PartialOrd,
 {
     fn eq(&self, other: &Self) -> bool {
         self.v == other.v
@@ -157,28 +157,30 @@ where
 
 impl<T> PartialOrd for Tuple<T>
 where
-    T: Ord,
+    T: PartialOrd,
 {
     fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
         self.v.partial_cmp(&other.v)
     }
 }
 
-impl<T> Ord for Tuple<T>
+/*
+impl<T> PartialOrd for Tuple<T>
 where
-    T: Ord,
+    T: PartialOrd,
 {
     fn cmp(&self, other: &Self) -> cmp::Ordering {
         self.v.cmp(&other.v)
     }
 }
+*/
 
 /// The summary S of the observations seen so far.
 #[cfg_attr(feature = "with_serde", derive(serde::Serialize, serde::Deserialize))]
 #[derive(Debug)]
 pub struct Stream<T>
 where
-    T: Ord,
+    T: PartialOrd,
 {
     /// An ordered sequence of the selected observations
     summary: Vec<Tuple<T>>,
@@ -192,7 +194,7 @@ where
 
 impl<T> Stream<T>
 where
-    T: Ord,
+    T: PartialOrd,
 {
     /// Creates a new instance of a Stream
     pub fn new(epsilon: f64) -> Stream<T> {
@@ -323,7 +325,7 @@ where
     }
 }
 
-impl<T: Ord> AddAssign for Stream<T> {
+impl<T: PartialOrd> AddAssign for Stream<T> {
     fn add_assign(&mut self, rhs: Self) {
         // The GK algorithm is a bit unclear about it, but we need to adjust the statistics during the
         // merging. The main idea is that samples that come from one side will suffer from the lack of
